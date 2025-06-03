@@ -19,7 +19,27 @@
             <div id="feedback-area"></div>
         </div>
     </div>
-    <script src="app.js" type="module"></script>
+    <script type="module">
+        import * as utils from './utils.js';
+        import { config, state, initAudioContext, loadAudio, playAudio, showFixation, showImage, getResponse, showFeedback, runTrial, startExperiment } from './app.js';
+        
+        // Initialize experiment when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.createElement('button');
+            startButton.textContent = 'Start Experiment';
+            startButton.className = 'response-button';
+            startButton.addEventListener('click', async () => {
+                try {
+                    await startExperiment();
+                } catch (error) {
+                    console.error('Error starting experiment:', error);
+                    utils.showErrorScreen(error);
+                }
+            });
+            
+            document.getElementById('stimulus-display').appendChild(startButton);
+        });
+    </script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

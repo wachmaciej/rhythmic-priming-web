@@ -1,5 +1,7 @@
+import { config, state, loadAudio } from './app.js';
+
 // Participant Info Dialog
-function getParticipantInfo() {
+export function getParticipantInfo() {
     return new Promise((resolve) => {
         const dialog = document.createElement('div');
         dialog.className = 'participant-dialog';
@@ -24,6 +26,7 @@ function getParticipantInfo() {
             </form>
         `;
 
+        const stimulusDisplay = document.getElementById('stimulus-display');
         stimulusDisplay.appendChild(dialog);
 
         const form = document.getElementById('participant-form');
@@ -41,7 +44,7 @@ function getParticipantInfo() {
 }
 
 // Load Stimuli
-async function loadStimuli() {
+export async function loadStimuli() {
     const audioFiles = {
         primes: {
             regular: 'stimuli/audio/regular.wav',
@@ -93,7 +96,7 @@ async function loadStimuli() {
 }
 
 // Generate Block Trials
-function generateBlockTrials() {
+export function generateBlockTrials() {
     const trials = [];
     const primeTypes = ['regular', 'irregular'];
     
@@ -120,7 +123,7 @@ function generateBlockTrials() {
 }
 
 // Run Practice Trials
-async function runPracticeTrials() {
+export async function runPracticeTrials() {
     const practiceTrials = [
         {
             primeType: 'regular',
@@ -142,17 +145,18 @@ async function runPracticeTrials() {
 }
 
 // Run Practice Trial
-async function runPracticeTrial(trialData) {
+export async function runPracticeTrial(trialData) {
     await runTrial(trialData);
     
     // Show detailed feedback
+    const feedbackArea = document.getElementById('feedback-area');
     feedbackArea.textContent = trialData.feedback;
     await new Promise(resolve => setTimeout(resolve, 3000));
     feedbackArea.textContent = '';
 }
 
 // Save Data
-async function saveData() {
+export async function saveData() {
     const filename = `${state.participantId}_session${state.sessionNumber}_set${state.sentenceSet}_${getTimestamp()}.json`;
     const dataStr = JSON.stringify(state.data, null, 2);
     
@@ -169,7 +173,7 @@ async function saveData() {
 }
 
 // Show Block Break
-async function showBlockBreak() {
+export async function showBlockBreak() {
     if (state.currentBlock < config.numBlocks - 1) {
         const breakScreen = document.createElement('div');
         breakScreen.className = 'break-screen';
@@ -180,6 +184,7 @@ async function showBlockBreak() {
             <button class="response-button">Continue</button>
         `;
 
+        const stimulusDisplay = document.getElementById('stimulus-display');
         stimulusDisplay.appendChild(breakScreen);
 
         await new Promise(resolve => {
@@ -192,7 +197,7 @@ async function showBlockBreak() {
 }
 
 // Show Completion Screen
-function showCompletionScreen() {
+export function showCompletionScreen() {
     const completionScreen = document.createElement('div');
     completionScreen.className = 'completion-screen';
     completionScreen.innerHTML = `
@@ -201,12 +206,13 @@ function showCompletionScreen() {
         <p>Your data has been saved.</p>
     `;
 
+    const stimulusDisplay = document.getElementById('stimulus-display');
     stimulusDisplay.innerHTML = '';
     stimulusDisplay.appendChild(completionScreen);
 }
 
 // Show Error Screen
-function showErrorScreen(error) {
+export function showErrorScreen(error) {
     const errorScreen = document.createElement('div');
     errorScreen.className = 'error-screen';
     errorScreen.innerHTML = `
@@ -215,6 +221,7 @@ function showErrorScreen(error) {
         <p class="error-details">${error.message}</p>
     `;
 
+    const stimulusDisplay = document.getElementById('stimulus-display');
     stimulusDisplay.innerHTML = '';
     stimulusDisplay.appendChild(errorScreen);
 }

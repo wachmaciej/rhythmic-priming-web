@@ -1,5 +1,5 @@
 // Experiment Configuration
-const config = {
+export const config = {
     fixationDuration: 500,
     postPrimePause: 500,
     exclamationDuration: 500,
@@ -14,7 +14,7 @@ const config = {
 };
 
 // Experiment State
-let state = {
+export const state = {
     participantId: '',
     sessionNumber: '',
     sentenceSet: '',
@@ -32,12 +32,12 @@ const responseArea = document.getElementById('response-area');
 const feedbackArea = document.getElementById('feedback-area');
 
 // Initialize Audio Context
-async function initAudioContext() {
+export async function initAudioContext() {
     state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 }
 
 // Load Audio File
-async function loadAudio(url) {
+export async function loadAudio(url) {
     if (state.audioBuffers.has(url)) {
         return state.audioBuffers.get(url);
     }
@@ -50,7 +50,7 @@ async function loadAudio(url) {
 }
 
 // Play Audio
-async function playAudio(buffer) {
+export async function playAudio(buffer) {
     const source = state.audioContext.createBufferSource();
     source.buffer = buffer;
     source.connect(state.audioContext.destination);
@@ -61,13 +61,13 @@ async function playAudio(buffer) {
 }
 
 // Show Fixation Cross
-function showFixation() {
+export function showFixation() {
     stimulusDisplay.innerHTML = '<div class="fixation">+</div>';
     return new Promise(resolve => setTimeout(resolve, config.fixationDuration));
 }
 
 // Show Image
-function showImage(imagePath) {
+export function showImage(imagePath) {
     return new Promise((resolve) => {
         const img = new Image();
         img.src = imagePath;
@@ -81,7 +81,7 @@ function showImage(imagePath) {
 }
 
 // Get Response
-function getResponse() {
+export function getResponse() {
     return new Promise((resolve) => {
         const happyButton = document.createElement('button');
         const confusedButton = document.createElement('button');
@@ -115,13 +115,13 @@ function getResponse() {
 }
 
 // Show Feedback
-function showFeedback(isCorrect) {
+export function showFeedback(isCorrect) {
     const feedbackImage = isCorrect ? 'dragon_correct.png' : 'dragon_incorrect.png';
     return showImage(feedbackImage);
 }
 
 // Run Trial
-async function runTrial(trialData) {
+export async function runTrial(trialData) {
     // Show fixation cross
     await showFixation();
 
@@ -164,7 +164,7 @@ async function runTrial(trialData) {
 }
 
 // Start Experiment
-async function startExperiment() {
+export async function startExperiment() {
     try {
         await initAudioContext();
         
